@@ -1,4 +1,5 @@
 from subprocess import run, CompletedProcess
+from multiprocessing import Pool
 from time import *
 
 from pathlib import Path
@@ -20,34 +21,43 @@ def parse_query_result(result : CompletedProcess):
 	return answer, runtime
 
 # Runs cvc5 on a query via its path
-def test_query(querypath, timelimit = 10000):
+def test_query(args):
+	querypath, timelimit = args
+
 	timelimitarg = f"--tlimit={timelimit}"
 	result = run(["cvc5/bin/cvc5.exe", querypath, timelimitarg, "--stats"], capture_output=True, text=True)
 	
 	# returns result, time
 	return parse_query_result(result)
 
-# Iteratively calls test_query on every .smt2 file in a directory
+
+
+
+
+
+# Calls test_query on every .smt2 file in a directory in batches of five
 def test_query_dir(directory, timelimit = 10000):
-	results = []	# output buffer
+	results = []		# output buffer
 
-	for file in Path(directory).iterdir():
-		file = str(file)
+	files = list(str(file) for file in Path(directory).iterdir())
+	N = len(files)
+	bs = 5				# batch size
 
-		# Just in case there is junk in the directory
-		if file[-5:] != ".smt2":
-			print(f"Skipping {file} as it does not appear to be a .smt2 file.")
-			continue
-		# Otherwise print a quick status message
-		print(f"Processing file {file}...")
+	for f in range(0, N, bs):
+		batch = files[f:f+bs]
+		print("Processing batch ", f//bs, " of ", N//bs - 1)
+		b = len(batch)
+		pool = Pool(processes = b)
 
-		# Run the query
-		result, runtime = test_query(file, timelimit)
+		times = pool.map(test_query, zip(batch, [timelimit]*b))
+		pool.close()
+		pool.join()
 		
-		# Store the result
-		results.append([file.split('\\')[-1], result, runtime])
-
+		for i in range(len(batch)):
+			results.append([batch[i].split('\\')[-1], times[i][0], times[i][1]])
+	
 	return results
+
 
 
 
@@ -60,7 +70,7 @@ def write_query_results(_results):
 		results.append(','.join(row))	# I have heard that joining lists is more efficient :)
 
 	# Write the results to the output file
-	with open("results.csv", 'w') as file:
+	with open("results-parallel.csv", 'w') as file:
 		file.write(
 			"QueryName,Result,ElapsedTime\n" + ('\n'.join(results)) # joins header with rows
 		)
@@ -83,8 +93,8 @@ def main(argv):
 	results = test_query_dir(querydirectory, timelimit)
 	# Task 4
 	write_query_results(results)
-	
 	print("Total time taken was", (time() - start)/60)
+	
 
 
 
