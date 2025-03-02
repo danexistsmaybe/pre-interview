@@ -4,7 +4,7 @@ from time import *
 from pathlib import Path
 from sys import argv
 
-# ============================= Functions for Running the Queries ==============================
+
 
 # Parses the result of running cvc5
 def parse_query_result(result : CompletedProcess):
@@ -49,8 +49,10 @@ def test_query_dir(directory, timelimit = 10000):
 
 	return results
 
-# ============================= Functions for Formatting the Output ==============================
 
+
+
+# Converts a 2D list of results into csv data and writes to a file
 def write_query_results(_results):
 	# Reformat each row as a csv string
 	results = []
@@ -63,7 +65,11 @@ def write_query_results(_results):
 			"QueryName,Result,ElapsedTime\n" + ('\n'.join(results)) # joins header with rows
 		)
 
-# ====================================== Main ===============================================
+
+
+
+
+# Main
 def main(argv):
 	# Handle arguments
 	if len(argv)>1: querydirectory = argv[1]
@@ -72,24 +78,11 @@ def main(argv):
 	if len(argv)>2: timelimit = int(argv[2])
 	else: 			timelimit = 10000
 	
-
+	# Task 3
 	results = test_query_dir(querydirectory, timelimit)
+	# Task 4
 	write_query_results(results)
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -99,7 +92,3 @@ if __name__ == "__main__":
 	main(argv)
 
 
-
-
-# Talking points:
-#	- 
