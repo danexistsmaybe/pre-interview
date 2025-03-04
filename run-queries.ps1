@@ -2,7 +2,7 @@ Write-Output "QueryName,Result,ElapsedTime" > results-ps.csv
 
 Get-ChildItem -Path "queries" -File | ForEach-Object {
 	Write-Output ("Processing file" + $_.Name)
-	$out = (& .\cvc5/bin/cvc5.exe $_.FullName --tlimit 1000 --stats 2>&1) | Out-String
+	$out = (& .\cvc5/bin/cvc5.exe $_.FullName --tlimit 60000 --stats 2>&1) | Out-String
 
 	$res = ($out | Select-String -Pattern "(unsat)|(sat)|(timeout)").Matches[0].Value.Trim()
 

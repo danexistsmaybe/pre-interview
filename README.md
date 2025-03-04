@@ -8,7 +8,7 @@ I am endeavoring to learn how to back flip and play guitar this semester.
 ## Requirements
 The only requirements for the Python script are Python 3.x.x and cvc5. For the PowerShell script, you would need to be on Windows.
 
-## How To Run The Script
+## How To Run The Script(s)
 ### Python
 Before running the script, ensure that cvc5.exe is in the location `cvc5/bin` relative to the main directory. You can also make it an environment variable and replace the path in the code.
 
