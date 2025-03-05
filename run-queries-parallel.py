@@ -86,7 +86,7 @@ def main(argv):
 	else: 			querydirectory = "queries"
 
 	if len(argv)>2: timelimit = int(argv[2])
-	else: 			timelimit = 10000
+	else: 			timelimit = 60000
 	
 	start = time()
 	# Task 3

@@ -12,7 +12,7 @@ The only requirements for the Python script are Python 3.x.x and cvc5. For the P
 ### Python
 Before running the script, ensure that cvc5.exe is in the location `cvc5/bin` relative to the main directory. You can also make it an environment variable and replace the path in the code.
 
-The script can be run with either the command `python run-queries.py` or `python run-queries.py <querydirectory> <timelimitms>`. Defaults are `queries` and 1000ms.
+The script can be run with either the command `python run-queries.py` or `python run-queries.py <querydirectory> <timelimitms>`. Defaults are `queries` and 60000ms.
 
 ### PowerShell
 I wanted to try doing it in a shell language because I am less familiar with them, but I would like to learn more. In order to run my attempt at the script in PowerShell, just execute `./run-queries1.ps1` in the terminal.
